@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import { SiteFooter } from "@/components/layout/site-footer";
-import { SiteHeader } from "@/components/layout/site-header";
+import { FooterLarge02 } from "@/components/marketing/footers/footer-large-02";
+import { Header } from "@/components/marketing/header-navigation/header";
 import { RouteProvider } from "@/providers/router-provider";
 import { Theme } from "@/providers/theme";
 import "@/styles/globals.css";
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-    themeColor: "#15342b",
+    themeColor: "#099250",
     colorScheme: "light dark",
 };
 
@@ -34,13 +34,13 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="uk" suppressHydrationWarning>
-            <body className={cx(inter.variable, "bg-secondary antialiased")}>
+            <body className={cx(inter.variable, "bg-primary antialiased")}>
                 <RouteProvider>
                     <Theme>
                         <div className="flex min-h-dvh flex-col">
-                            <SiteHeader />
+                            <Header />
                             <main className="flex-1">{children}</main>
-                            <SiteFooter />
+                            <FooterLarge02 />
                         </div>
                     </Theme>
                 </RouteProvider>

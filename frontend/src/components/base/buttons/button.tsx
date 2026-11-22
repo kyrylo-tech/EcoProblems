@@ -63,21 +63,6 @@ export const styles = sortCx({
                 "*:data-icon:text-white/60 hover:*:data-icon:text-white/70",
             ].join(" "),
         },
-        // Eco Guard: dark forest button (header CTA, map actions)
-        "primary-dark": {
-            root: [
-                "bg-brand-section text-white shadow-xs-skeuomorphic ring-1 ring-transparent ring-inset hover:bg-brand-solid_hover data-loading:bg-brand-solid_hover",
-                "before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
-                "*:data-icon:text-white/60 hover:*:data-icon:text-white/70",
-            ].join(" "),
-        },
-        // Eco Guard: lime accent button for dark sections
-        accent: {
-            root: [
-                "bg-accent-solid text-on-accent shadow-xs ring-1 ring-transparent ring-inset hover:bg-accent-solid_hover data-loading:bg-accent-solid_hover",
-                "*:data-icon:text-on-accent/70 hover:*:data-icon:text-on-accent",
-            ].join(" "),
-        },
         secondary: {
             root: [
                 "bg-primary text-secondary shadow-xs-skeuomorphic ring-1 ring-primary ring-inset hover:bg-primary_hover hover:text-secondary_hover data-loading:bg-primary_hover",

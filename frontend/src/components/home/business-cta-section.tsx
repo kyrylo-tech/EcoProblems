@@ -1,17 +1,26 @@
 import { Button } from "@/components/base/buttons/button";
-import { ADD_POINT_HREF } from "@/components/layout/site-header";
+import { ADD_POINT_HREF } from "@/components/marketing/header-navigation/header";
+
+/** Untitled UI `cta-card-horizontal-brand`. */
 
 export const BusinessCtaSection = () => {
     return (
-        <section id="business" className="mx-auto w-full max-w-container scroll-mt-6 px-4 pt-16 md:px-8 md:pt-24">
-            <div className="flex flex-col items-start gap-6 rounded-3xl bg-brand-section px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12 md:py-12">
-                <div>
-                    <h2 className="text-display-xs font-bold tracking-tight text-primary_on-brand">Керуєте пунктом прийому?</h2>
-                    <p className="mt-2 text-lg text-secondary_on-brand">Додайте його на карту, щоб вас легше знаходили.</p>
+        <section id="business" className="scroll-mt-18 bg-primary py-16 md:py-24">
+            <div className="mx-auto max-w-container px-4 md:px-8">
+                <div className="flex flex-col items-center rounded-2xl bg-brand-section px-6 py-10 text-center lg:p-16">
+                    <h2 className="text-display-sm font-semibold text-primary_on-brand xl:text-display-md">Керуєте пунктом прийому?</h2>
+                    <p className="mt-4 text-lg text-tertiary_on-brand md:mt-5 lg:text-xl">
+                        Додайте його на карту — і люди з вашого району знатимуть, куди нести вторсировину.
+                    </p>
+                    <div className="mt-8 flex flex-col-reverse gap-3 self-stretch sm:flex-row sm:self-center">
+                        <Button color="secondary" size="xl" href="/#how" className="shadow-xs! ring-0">
+                            Як це працює
+                        </Button>
+                        <Button size="xl" href={ADD_POINT_HREF}>
+                            Додати пункт
+                        </Button>
+                    </div>
                 </div>
-                <Button color="accent" size="xl" href={ADD_POINT_HREF} className="shrink-0 rounded-full">
-                    Додати пункт
-                </Button>
             </div>
         </section>
     );

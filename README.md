@@ -74,6 +74,7 @@ npm run dev
 
 http://localhost:3000. Запити на `/api/*` Next проксує на бекенд (`BACKEND_URL`, за замовчуванням `http://localhost:8000`), Server Components ходять на бекенд напряму (`src/lib/server-api.ts`).
 
-- UI — лише [Untitled UI](https://www.untitledui.com/react): компоненти в `src/components`, нові — `npx untitledui@latest add <component>`.
-- Палітра Eco Guard (лісовий зелений, зеленувато-сірий, лаймовий акцент) — `src/styles/eco-theme.css` поверх теми Untitled UI.
-- Зараз готові: лейаут, хедер, футер, головна (`src/components/home`).
+- UI — лише [Untitled UI](https://www.untitledui.com/react) (PRO-ліцензія з `~/.untitledui/config.json`): нові компоненти — `npx untitledui@latest add <component>`, пошук — `npx untitledui@latest search "<запит>"`.
+- Тема — стандартна Untitled UI з зеленим brand (`src/styles/theme.css`), світла й темна.
+- Лейаут: `marketing/header-navigation/header.tsx` (Header) і `marketing/footers/footer-large-02.tsx`.
+- Головна (`src/components/home`) зібрана з секцій Untitled UI: `hero-split-image-01` (замість картинки — карта пунктів), `metrics-card-gray-light`, `features-icon-cards-01/02`, `progress-steps`, `cta-card-horizontal-brand`.

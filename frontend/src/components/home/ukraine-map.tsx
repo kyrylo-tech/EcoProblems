@@ -39,13 +39,12 @@ const BORDER_PATH = `M${BORDER.map(([lon, lat]) => project(lon, lat).map((v) => 
 
 interface UkraineMapProps {
     points: PointSummary[];
-    colorOf: (point: PointSummary) => string;
     activeId: number | null;
     onSelect: (point: PointSummary) => void;
     className?: string;
 }
 
-export const UkraineMap = ({ points, colorOf, activeId, onSelect, className }: UkraineMapProps) => {
+export const UkraineMap = ({ points, activeId, onSelect, className }: UkraineMapProps) => {
     const handleKey = (event: KeyboardEvent, point: PointSummary) => {
         if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
@@ -58,7 +57,7 @@ export const UkraineMap = ({ points, colorOf, activeId, onSelect, className }: U
 
     return (
         <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className={cx("h-auto w-full", className)} role="group" aria-label="Карта України з пунктами">
-            <path d={BORDER_PATH} className="fill-map-land stroke-map-border" strokeWidth={1.5} strokeLinejoin="round" />
+            <path d={BORDER_PATH} className="fill-utility-brand-50 stroke-utility-brand-300" strokeWidth={1.5} strokeLinejoin="round" />
 
             {ordered.map((point) => {
                 const [x, y] = project(point.longitude, point.latitude);
@@ -85,7 +84,13 @@ export const UkraineMap = ({ points, colorOf, activeId, onSelect, className }: U
                                 isActive ? "opacity-100" : "opacity-0 group-hover:opacity-50 group-focus-visible:opacity-100",
                             )}
                         />
-                        <circle cx={x} cy={y} r={7.5} fill={colorOf(point)} strokeWidth={2.5} className="stroke-bg-primary" />
+                        <circle
+                            cx={x}
+                            cy={y}
+                            r={isActive ? 8.5 : 7}
+                            strokeWidth={2.5}
+                            className={cx("stroke-bg-primary transition duration-100 ease-linear", isActive ? "fill-fg-brand-primary" : "fill-utility-brand-500")}
+                        />
                     </g>
                 );
             })}
