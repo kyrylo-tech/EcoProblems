@@ -7,7 +7,10 @@ export class ApiError extends Error {
     }
 }
 
-/** Calls the FastAPI backend through the Next.js /api proxy (see next.config.mjs). */
+/**
+ * Calls the FastAPI backend through the Next.js /api proxy (see next.config.mjs).
+ * Signed-in requests are authorized automatically: src/proxy.ts adds the Bearer token from the session cookie.
+ */
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
     const res = await fetch(`/api${path}`, {
         ...init,
