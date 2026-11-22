@@ -7,7 +7,9 @@ import { Button as AriaButton, Dialog as AriaDialog, DialogTrigger as AriaDialog
 import { Button } from "@/components/base/buttons/button";
 import { ThemeToggle } from "@/components/base/buttons/theme-toggle";
 import { EcoGuardLogo } from "@/components/foundations/logo/eco-guard-logo";
+import type { User } from "@/lib/types";
 import { cx } from "@/utils/cx";
+import { AccountMenu, MobileAccount } from "./base-components/account-menu";
 import { DropdownMenuMap } from "./dropdown-menu-map";
 
 export const LOGIN_HREF = "/login";
@@ -65,7 +67,7 @@ const MobileNavItem = (props: { className?: string; label: string; href?: string
     );
 };
 
-const MobileFooter = () => {
+const MobileFooter = ({ user }: { user?: User | null }) => {
     return (
         <div className="flex flex-col gap-8 border-t border-secondary px-4 py-6">
             <div>
@@ -83,15 +85,21 @@ const MobileFooter = () => {
                 <Button size="md" href={ADD_POINT_HREF}>
                     Додати точку
                 </Button>
-                <Button color="secondary" size="md" href={LOGIN_HREF}>
-                    Увійти
-                </Button>
+                {user ? (
+                    <MobileAccount user={user} />
+                ) : (
+                    <Button color="secondary" size="md" href={LOGIN_HREF}>
+                        Увійти
+                    </Button>
+                )}
             </div>
         </div>
     );
 };
 
 interface HeaderProps {
+    /** Signed-in user (from the session cookie, resolved in the root layout); null for guests. */
+    user?: User | null;
     items?: HeaderNavItem[];
     isFullWidth?: boolean;
     isFloating?: boolean;
@@ -100,7 +108,7 @@ interface HeaderProps {
     autoOpenMenu?: boolean;
 }
 
-export const Header = ({ items = headerNavItems, isFullWidth, isFloating, className, autoOpenMenu }: HeaderProps) => {
+export const Header = ({ user, items = headerNavItems, isFullWidth, isFloating, className, autoOpenMenu }: HeaderProps) => {
     const headerRef = useRef<HTMLElement>(null);
 
     return (
@@ -183,12 +191,15 @@ export const Header = ({ items = headerNavItems, isFullWidth, isFloating, classN
 
                     <div className="hidden items-center gap-3 md:flex">
                         <ThemeToggle />
-                        <Button color="secondary" size={isFloating ? "md" : "sm"} href={LOGIN_HREF}>
-                            Увійти
-                        </Button>
+                        {!user && (
+                            <Button color="secondary" size={isFloating ? "md" : "sm"} href={LOGIN_HREF}>
+                                Увійти
+                            </Button>
+                        )}
                         <Button color="primary" size={isFloating ? "md" : "sm"} href={ADD_POINT_HREF}>
                             Додати точку
                         </Button>
+                        {user && <AccountMenu user={user} />}
                     </div>
 
                     <ThemeToggle className="ml-auto items-center md:hidden" />
@@ -246,7 +257,7 @@ export const Header = ({ items = headerNavItems, isFullWidth, isFloating, classN
                                         )}
                                     </ul>
 
-                                    <MobileFooter />
+                                    <MobileFooter user={user} />
                                 </nav>
                             </AriaDialog>
                         </AriaPopover>

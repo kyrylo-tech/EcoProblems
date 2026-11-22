@@ -78,3 +78,10 @@ http://localhost:3000. Запити на `/api/*` Next проксує на бе�
 - Тема — стандартна Untitled UI з зеленим brand (`src/styles/theme.css`), світла й темна.
 - Лейаут: `marketing/header-navigation/header.tsx` (Header) і `marketing/footers/footer-large-02.tsx`.
 - Головна (`src/components/home`) зібрана з секцій Untitled UI: `hero-split-image-01` (замість картинки — карта пунктів), `metrics-card-gray-light`, `features-icon-cards-01/02`, `progress-steps`, `cta-card-horizontal-brand`.
+
+### Авторизація
+
+- Сторінки `/login` і `/register` (`src/components/auth`, за макетом Untitled UI `log-in-simple` / `sign-up-simple`). Параметр `?next=/шлях` — куди повернути після входу.
+- Server Actions (`src/lib/auth-actions.ts`) викликають `/api/auth/login` і `/api/auth/register` та кладуть JWT у httpOnly-cookie `eg_session` (без «Запам'ятати мене» — до закриття браузера). Вихід — видалення cookie.
+- Server Components: `getCurrentUser()` з `src/lib/current-user.ts` (root layout передає користувача в Header).
+- Клієнтські запити `api()` на `/api/*`: `src/proxy.ts` перетворює cookie на `Authorization: Bearer`, тож токен у JS не потрапляє.

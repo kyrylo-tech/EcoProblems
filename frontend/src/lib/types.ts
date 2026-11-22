@@ -17,6 +17,21 @@ export type EcoProblemKind =
     | "other";
 export type Weekday = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
 
+export interface User {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    role: UserRole;
+    created_at: string;
+}
+
+export interface TokenResponse {
+    access_token: string;
+    token_type: "bearer";
+    user: User;
+}
+
 export interface Page<T> {
     items: T[];
     total: number;

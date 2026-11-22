@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { FooterLarge02 } from "@/components/marketing/footers/footer-large-02";
 import { Header } from "@/components/marketing/header-navigation/header";
+import { getCurrentUser } from "@/lib/current-user";
 import { RouteProvider } from "@/providers/router-provider";
 import { Theme } from "@/providers/theme";
 import "@/styles/globals.css";
@@ -27,18 +28,20 @@ export const viewport: Viewport = {
     colorScheme: "light dark",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const user = await getCurrentUser();
+
     return (
         <html lang="uk" suppressHydrationWarning>
             <body className={cx(inter.variable, "bg-primary antialiased")}>
                 <RouteProvider>
                     <Theme>
                         <div className="flex min-h-dvh flex-col">
-                            <Header />
+                            <Header user={user} />
                             <main className="flex-1">{children}</main>
                             <FooterLarge02 />
                         </div>
