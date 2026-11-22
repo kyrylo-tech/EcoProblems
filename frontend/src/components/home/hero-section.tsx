@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ArrowRight, MarkerPin01, Route, SearchLg } from "@untitledui/icons";
 import { BadgeGroup } from "@/components/base/badges/badge-groups";
@@ -20,9 +21,6 @@ interface HeroSectionProps {
     wasteKinds: WasteKindOption[];
     activeWaste: WasteKindOption | null;
     onClearWaste: () => void;
-    searchMessage: string | null;
-    isSearching: boolean;
-    onSearch: (query: string) => void;
     activePoint: PointSummary | null;
     onSelectPoint: (point: PointSummary) => void;
 }
@@ -32,12 +30,10 @@ export const HeroSection = ({
     wasteKinds,
     activeWaste,
     onClearWaste,
-    searchMessage,
-    isSearching,
-    onSearch,
     activePoint,
     onSelectPoint,
 }: HeroSectionProps) => {
+    const router = useRouter();
     const [query, setQuery] = useState("");
     const labelOf = new Map(wasteKinds.map((kind) => [kind.value, kind.label]));
 
@@ -66,7 +62,8 @@ export const HeroSection = ({
                         role="search"
                         onSubmit={(event) => {
                             event.preventDefault();
-                            onSearch(query.trim());
+                            const searchQuery = query.trim();
+                            router.push(searchQuery ? `/map?q=${encodeURIComponent(searchQuery)}` : "/map");
                         }}
                         className="mt-8 flex w-full flex-col items-stretch gap-4 md:mt-12 md:max-w-120 md:flex-row md:items-start"
                     >
@@ -79,13 +76,10 @@ export const HeroSection = ({
                             placeholder="Місто, вулиця або назва пункту"
                             wrapperClassName="py-0.5"
                             value={query}
-                            onChange={(value) => {
-                                setQuery(value);
-                                if (!value.trim()) onSearch("");
-                            }}
-                            hint={searchMessage ?? "Наприклад: Львів, Городоцька або «Чисте місто»."}
+                            onChange={setQuery}
+                            hint="Наприклад: Львів, Городоцька або «Чисте місто»."
                         />
-                        <Button type="submit" size="xl" isLoading={isSearching}>
+                        <Button type="submit" size="xl">
                             Знайти
                         </Button>
                     </Form>

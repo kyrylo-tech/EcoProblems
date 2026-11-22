@@ -6,6 +6,7 @@ import { getCurrentUser } from "@/lib/current-user";
 import { RouteProvider } from "@/providers/router-provider";
 import { Theme } from "@/providers/theme";
 import "@/styles/globals.css";
+import "leaflet/dist/leaflet.css";
 import { cx } from "@/utils/cx";
 
 const inter = Inter({

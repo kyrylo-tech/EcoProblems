@@ -76,7 +76,7 @@ export const AboutScreen = ({ stats }: { stats: Stats | null }) => (
             description="Знаєте пункт прийому чи помітили проблему поруч? Додайте її на карту — це займе кілька хвилин."
             actions={
                 <>
-                    <Button color="secondary" size="xl" href="/#map" className="shadow-xs! ring-0">
+                    <Button color="secondary" size="xl" href="/map" className="shadow-xs! ring-0">
                         Відкрити карту
                     </Button>
                     <Button size="xl" href={ADD_POINT_HREF}>

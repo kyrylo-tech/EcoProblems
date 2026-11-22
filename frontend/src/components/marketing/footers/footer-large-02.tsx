@@ -10,8 +10,8 @@ const footerNavList = [
     {
         label: "Карта",
         items: [
-            { label: "Пункти прийому", href: "/#map" },
-            { label: "Екопроблеми", href: "/#problems" },
+            { label: "Пункти прийому", href: "/map?type=collection" },
+            { label: "Екопроблеми", href: "/map?type=eco_problem" },
             { label: "Що можна здати", href: "/#waste" },
             {
                 label: "Додати точку",

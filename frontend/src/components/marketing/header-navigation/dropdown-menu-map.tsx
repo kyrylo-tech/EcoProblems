@@ -10,13 +10,13 @@ const items = [
     {
         title: "Пункти прийому",
         subtitle: "Куди здати пластик, скло, папір, метал, батарейки й одяг.",
-        href: "/#map",
+        href: "/map?type=collection",
         Icon: MarkerPin01,
     },
     {
         title: "Екопроблеми",
         subtitle: "Стихійні звалища, забруднення води та повітря поруч із вами.",
-        href: "/#problems",
+        href: "/map?type=eco_problem",
         Icon: AlertTriangle,
     },
     {
@@ -45,7 +45,7 @@ export const DropdownMenuMap = () => {
                     ))}
                 </ul>
                 <div className="flex justify-center px-4 py-5 text-center sm:px-5">
-                    <Button href="/#map" color="link-color" size="md">
+                    <Button href="/map" color="link-color" size="md">
                         Відкрити карту
                     </Button>
                 </div>

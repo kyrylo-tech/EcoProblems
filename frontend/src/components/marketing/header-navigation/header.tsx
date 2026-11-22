@@ -22,9 +22,9 @@ type HeaderNavItem = {
 };
 
 const headerNavItems: HeaderNavItem[] = [
-    { label: "Карта", href: "/#map", menu: <DropdownMenuMap /> },
+    { label: "Карта", href: "/map", menu: <DropdownMenuMap /> },
     { label: "Що здавати", href: "/#waste" },
-    { label: "Екопроблеми", href: "/#problems" },
+    { label: "Екопроблеми", href: "/map?type=eco_problem" },
     { label: "Як це працює", href: "/#how" },
     { label: "Для бізнесу", href: "/#business" },
 ];

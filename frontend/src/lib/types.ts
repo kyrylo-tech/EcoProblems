@@ -96,3 +96,14 @@ export interface PointSummary {
     created_at: string;
     distance_km: number | null;
 }
+
+export interface PointPhoto {
+    id: number;
+    url: string;
+    created_at: string;
+}
+
+export interface PointDetail extends PointSummary {
+    description: string | null;
+    photos: PointPhoto[];
+}

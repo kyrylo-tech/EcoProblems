@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
+import dynamic from "next/dynamic";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
@@ -8,6 +9,18 @@ import { NativeSelect } from "@/components/base/select/select-native";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
 import { TextArea } from "@/components/base/textarea/textarea";
 import type { Catalog, DayHours, PointType, Weekday, WasteKind } from "@/lib/types";
+
+const CoordinatePicker = dynamic(
+    () => import("@/components/points/coordinate-picker").then((module) => module.CoordinatePicker),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="flex h-72 items-center justify-center rounded-xl bg-secondary text-sm text-tertiary ring-1 ring-secondary">
+                Завантаження карти…
+            </div>
+        ),
+    },
+);
 
 const MAX_PHOTOS = 10;
 const MAX_PHOTO_SIZE = 10 * 1024 * 1024;
@@ -97,27 +110,38 @@ function localizedError(error: unknown, fallback: string): string {
     return error instanceof Error && !(error instanceof TypeError) && error.message ? error.message : fallback;
 }
 
-async function uploadPhotos(pointId: number, files: File[], token: string): Promise<void> {
+class PhotoUploadError extends Error {
+    constructor(
+        message: string,
+        readonly status: number,
+    ) {
+        super(message);
+    }
+}
+
+async function uploadPhotos(pointId: number, files: File[]): Promise<void> {
     const formData = new FormData();
     files.forEach((file) => formData.append("files", file, file.name));
 
     const response = await fetch(`/api/points/${pointId}/photos`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
         body: formData,
     });
     const body = await readResponseBody(response);
     if (!response.ok) {
-        throw new Error(responseErrorMessage(body) ?? "Не вдалося завантажити фото. Спробуйте ще раз.");
+        throw new PhotoUploadError(
+            responseErrorMessage(body) ?? "Не вдалося завантажити фото. Спробуйте ще раз.",
+            response.status,
+        );
     }
 }
 
-export const NewPointForm = () => {
+export const NewPointForm = ({ isAuthenticated: initialIsAuthenticated }: { isAuthenticated: boolean }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
     const [catalogError, setCatalogError] = useState<string | null>(null);
     const [catalogLoadVersion, setCatalogLoadVersion] = useState(0);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(initialIsAuthenticated);
     const [type, setType] = useState<PointType>("eco_problem");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -136,8 +160,6 @@ export const NewPointForm = () => {
     const [isRetryingPhotos, setIsRetryingPhotos] = useState(false);
 
     useEffect(() => {
-        setIsAuthenticated(Boolean(localStorage.getItem("access_token")));
-
         const loadCatalog = async () => {
             setCatalogError(null);
             try {
@@ -210,9 +232,7 @@ export const NewPointForm = () => {
         setFormError(null);
         setSuccessMessage(null);
 
-        const token = localStorage.getItem("access_token");
-        if (!token) {
-            setIsAuthenticated(false);
+        if (!isAuthenticated) {
             setFormError("Щоб додати точку, увійдіть у свій обліковий запис.");
             return;
         }
@@ -242,8 +262,8 @@ export const NewPointForm = () => {
             return;
         }
 
-        const latitudeValue = Number(latitude);
-        const longitudeValue = Number(longitude);
+        const latitudeValue = Number(latitude.trim().replace(",", "."));
+        const longitudeValue = Number(longitude.trim().replace(",", "."));
         if (!Number.isFinite(latitudeValue) || latitudeValue < -90 || latitudeValue > 90) {
             setFormError("Широта має бути числом від -90 до 90.");
             return;
@@ -288,13 +308,13 @@ export const NewPointForm = () => {
             const response = await fetch("/api/points", {
                 method: "POST",
                 headers: {
-                    Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(payload),
             });
             const body = await readResponseBody(response);
             if (!response.ok) {
+                if (response.status === 401) setIsAuthenticated(false);
                 throw new Error(responseErrorMessage(body) ?? "Не вдалося додати точку. Перевірте дані та спробуйте ще раз.");
             }
 
@@ -305,8 +325,9 @@ export const NewPointForm = () => {
 
             if (photos.length > 0) {
                 try {
-                    await uploadPhotos(pointId, photos, token);
+                    await uploadPhotos(pointId, photos);
                 } catch (error) {
+                    if (error instanceof PhotoUploadError && error.status === 401) setIsAuthenticated(false);
                     setPendingPhotoUpload({ pointId, files: photos });
                     setFormError(
                         `Точку створено, але фото не завантажено: ${localizedError(
@@ -320,6 +341,7 @@ export const NewPointForm = () => {
 
             setSuccessMessage("Точку додано. Дякуємо за внесок! Вона стане доступною після перевірки.");
         } catch (error) {
+            if (error instanceof PhotoUploadError && error.status === 401) setIsAuthenticated(false);
             setFormError(
                 localizedError(error, "Не вдалося зв’язатися із сервером. Перевірте з’єднання та спробуйте ще раз."),
             );
@@ -330,9 +352,7 @@ export const NewPointForm = () => {
 
     const retryPhotoUpload = async () => {
         if (!pendingPhotoUpload) return;
-        const token = localStorage.getItem("access_token");
-        if (!token) {
-            setIsAuthenticated(false);
+        if (!isAuthenticated) {
             setFormError("Щоб завантажити фото, увійдіть у свій обліковий запис.");
             return;
         }
@@ -340,10 +360,11 @@ export const NewPointForm = () => {
         setIsRetryingPhotos(true);
         setFormError(null);
         try {
-            await uploadPhotos(pendingPhotoUpload.pointId, pendingPhotoUpload.files, token);
+            await uploadPhotos(pendingPhotoUpload.pointId, pendingPhotoUpload.files);
             setPendingPhotoUpload(null);
             setSuccessMessage("Точку додано разом із фото. Дякуємо за внесок! Вона стане доступною після перевірки.");
         } catch (error) {
+            if (error instanceof PhotoUploadError && error.status === 401) setIsAuthenticated(false);
             setFormError(
                 `Точку створено, але фото не завантажено: ${localizedError(
                     error,
@@ -459,6 +480,14 @@ export const NewPointForm = () => {
                                         placeholder="30.5234"
                                     />
                                 </div>
+                                <CoordinatePicker
+                                    latitude={latitude}
+                                    longitude={longitude}
+                                    onChange={(nextLatitude, nextLongitude) => {
+                                        setLatitude(nextLatitude);
+                                        setLongitude(nextLongitude);
+                                    }}
+                                />
                                 <p className="text-sm text-tertiary">
                                     Місто й вулицю буде визначено автоматично за координатами.
                                 </p>

@@ -138,7 +138,7 @@ export const HowItWorksScreen = ({ catalog }: { catalog: Catalog | null }) => (
             description="Знайдіть найближчий пункт прийому або додайте на карту те, що знаєте саме ви."
             actions={
                 <>
-                    <Button color="secondary" size="xl" href="/#map" className="shadow-xs! ring-0">
+                    <Button color="secondary" size="xl" href="/map" className="shadow-xs! ring-0">
                         Знайти пункт
                     </Button>
                     <Button size="xl" href={ADD_POINT_HREF}>
