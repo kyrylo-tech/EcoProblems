@@ -1,8 +1,9 @@
 "use client";
 
-import { MarkerPin01, Route, SearchLg } from "@untitledui/icons";
+import { ArrowRight, MarkerPin01, Route, SearchLg } from "@untitledui/icons";
 import { Progress } from "@/components/application/progress-steps/progress-steps";
 import type { ProgressFeaturedIconType } from "@/components/application/progress-steps/progress-types";
+import { Button } from "@/components/base/buttons/button";
 
 /** Untitled UI section header + `progress-steps` (featured icons). */
 
@@ -25,6 +26,12 @@ export const HowItWorksSection = () => {
                 <div className="mx-auto mt-12 max-w-4xl md:mt-16">
                     <Progress.IconsWithText type="featured-icon" orientation="horizontal" size="md" items={steps} className="max-md:hidden" />
                     <Progress.IconsWithText type="featured-icon" orientation="vertical" size="md" items={steps} className="md:hidden" />
+                </div>
+
+                <div className="mt-12 flex justify-center md:mt-16">
+                    <Button href="/how-it-works" color="link-color" size="lg" iconTrailing={ArrowRight}>
+                        Детальніше про модерацію, фото та підготовку вторсировини
+                    </Button>
                 </div>
             </div>
         </section>

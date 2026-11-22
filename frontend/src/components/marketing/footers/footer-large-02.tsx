@@ -28,8 +28,8 @@ const footerNavList = [
         label: "Проєкт",
         items: [
             { label: "Про проєкт", href: "/about" },
-            { label: "Як це працює", href: "/#how" },
-            { label: "Для бізнесу", href: "/#business" },
+            { label: "Як це працює", href: "/how-it-works" },
+            { label: "Для бізнесу", href: "/business" },
             { label: "Контакти", href: "/contacts" },
         ],
     },

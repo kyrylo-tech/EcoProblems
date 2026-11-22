@@ -13,8 +13,8 @@ export const BusinessCtaSection = () => {
                         Додайте його на карту — і люди з вашого району знатимуть, куди нести вторсировину.
                     </p>
                     <div className="mt-8 flex flex-col-reverse gap-3 self-stretch sm:flex-row sm:self-center">
-                        <Button color="secondary" size="xl" href="/#how" className="shadow-xs! ring-0">
-                            Як це працює
+                        <Button color="secondary" size="xl" href="/business" className="shadow-xs! ring-0">
+                            Детальніше
                         </Button>
                         <Button size="xl" href={ADD_POINT_HREF}>
                             Додати пункт
